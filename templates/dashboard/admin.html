@@ -1,0 +1,325 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Admin Dashboard - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-download"></i> Export
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Employees</h6>
+                        <h2 class="mb-0">{{ total_employees }}</h2>
+                    </div>
+                    <div>
+                        <i class="fas fa-users fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Departments</h6>
+                        <h2 class="mb-0">{{ total_departments }}</h2>
+                    </div>
+                    <div>
+                        <i class="fas fa-building fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Present Today</h6>
+                        <h2 class="mb-0">{{ attendance_summary.present }}</h2>
+                    </div>
+                    <div>
+                        <i class="fas fa-calendar-check fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Pending Leaves</h6>
+                        <h2 class="mb-0">{{ pending_leaves }}</h2>
+                    </div>
+                    <div>
+                        <i class="fas fa-calendar-times fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Summary -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Today's Attendance</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Employees</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in recent_employees %}
+                            <tr>
+                                <td>{{ employee.employee_id }}</td>
+                                <td>{{ employee.full_name }}</td>
+                                <td>{{ employee.department.name if employee.department else 'N/A' }}</td>
+                                <td>{{ employee.hire_date.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics -->
+<div class="row mb-4">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-chart-line"></i> This Week's Attendance Trend</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyTrendChart" height="110"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-smile"></i> Emotion Analytics (Last 30 Days)</h5>
+            </div>
+            <div class="card-body">
+                {% if emotion_distribution.has_data %}
+                <canvas id="emotionChart" height="180"></canvas>
+                {% else %}
+                <p class="text-muted text-center mb-0 py-4">
+                    No emotion data captured yet. Emotions are recorded automatically during face-recognition check-in/check-out.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-building"></i> Employees by Department</h5>
+            </div>
+            <div class="card-body">
+                {% if department_headcount.has_data %}
+                <canvas id="departmentChart" height="160"></canvas>
+                {% else %}
+                <p class="text-muted text-center mb-0 py-4">No department assignments yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-money-bill-wave"></i> Payroll Trend (Last 6 Months)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="payrollTrendChart" height="160"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('employees.add') }}" class="btn btn-primary me-2">
+                    <i class="fas fa-user-plus"></i> Add Employee
+                </a>
+                <a href="{{ url_for('departments.add') }}" class="btn btn-success me-2">
+                    <i class="fas fa-building"></i> Add Department
+                </a>
+                <a href="{{ url_for('attendance.live') }}" class="btn btn-info me-2">
+                    <i class="fas fa-camera"></i> Mark Attendance
+                </a>
+                <a href="{{ url_for('reports.attendance') }}" class="btn btn-warning">
+                    <i class="fas fa-chart-bar"></i> Generate Report
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Shared palette matching the site's design (see static/css/style.css)
+    const CHART_COLORS = {
+        primary: '#6C63A6',
+        success: '#5F8F73',
+        warning: '#C08A4E',
+        danger: '#B25C6E',
+        info: '#4F8A90',
+        neutral: '#8B87A3'
+    };
+
+    // Today's Attendance
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Present', 'Late', 'Absent'],
+            datasets: [{
+                data: [{{ attendance_summary.present }}, {{ attendance_summary.late }}, {{ attendance_summary.absent }}],
+                backgroundColor: [CHART_COLORS.success, CHART_COLORS.warning, CHART_COLORS.danger]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // This Week's Attendance Trend
+    new Chart(document.getElementById('weeklyTrendChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: {{ weekly_trend.labels|tojson }},
+            datasets: [
+                { label: 'Present', data: {{ weekly_trend.present|tojson }}, backgroundColor: CHART_COLORS.success },
+                { label: 'Late', data: {{ weekly_trend.late|tojson }}, backgroundColor: CHART_COLORS.warning },
+                { label: 'Absent', data: {{ weekly_trend.absent|tojson }}, backgroundColor: CHART_COLORS.danger }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+
+    {% if emotion_distribution.has_data %}
+    // Emotion Analytics
+    new Chart(document.getElementById('emotionChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: {{ emotion_distribution.labels|tojson }},
+            datasets: [{
+                data: {{ emotion_distribution.counts|tojson }},
+                backgroundColor: [
+                    CHART_COLORS.success, CHART_COLORS.info, CHART_COLORS.warning,
+                    CHART_COLORS.danger, CHART_COLORS.primary, CHART_COLORS.neutral, '#C9A9D9'
+                ]
+            }]
+        },
+        options: { responsive: true }
+    });
+    {% endif %}
+
+    {% if department_headcount.has_data %}
+    // Employees by Department
+    new Chart(document.getElementById('departmentChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: {{ department_headcount.labels|tojson }},
+            datasets: [{
+                label: 'Active Employees',
+                data: {{ department_headcount.counts|tojson }},
+                backgroundColor: CHART_COLORS.primary
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+    });
+    {% endif %}
+
+    // Payroll Trend
+    new Chart(document.getElementById('payrollTrendChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: {{ payroll_trend.labels|tojson }},
+            datasets: [{
+                label: 'Net Payroll (Rs.)',
+                data: {{ payroll_trend.totals|tojson }},
+                borderColor: CHART_COLORS.info,
+                backgroundColor: 'rgba(79, 138, 144, 0.15)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Employee Dashboard - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-tachometer-alt"></i> My Dashboard</h1>
+</div>
+
+<!-- Employee Info -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if employee.photo_path %}
+                <img src="{{ url_for('static', filename=employee.photo_path) }}" alt="Profile" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                <i class="fas fa-user-circle fa-8x text-secondary mb-3"></i>
+                {% endif %}
+                <h4>{{ employee.full_name }}</h4>
+                <p class="text-muted">{{ employee.position }}</p>
+                <p><strong>{{ employee.employee_id }}</strong></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h6>Present This Month</h6>
+                        <h2>{{ present_days }} days</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h6>Total Hours</h6>
+                        <h2>{{ "%.2f"|format(total_hours) }} hrs</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h6>Leave Balance</h6>
+                        <h2>{{ remaining_leaves }} days</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h6>Today's Status</h6>
+                        <h2>
+                            {% if today_attendance and today_attendance.check_in %}
+                                <i class="fas fa-check-circle"></i> Present
+                            {% else %}
+                                <i class="fas fa-times-circle"></i> Absent
+                            {% endif %}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Today's Attendance -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Today's Attendance</h5>
+            </div>
+            <div class="card-body">
+                {% if today_attendance %}
+                <table class="table">
+                    <tr>
+                        <th>Check In:</th>
+                        <td>{{ today_attendance.check_in.strftime('%H:%M:%S') if today_attendance.check_in else 'Not checked in' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Check Out:</th>
+                        <td>{{ today_attendance.check_out.strftime('%H:%M:%S') if today_attendance.check_out else 'Not checked out' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Work Hours:</th>
+                        <td>{{ "%.2f"|format(today_attendance.work_hours) if today_attendance.work_hours else '0' }} hours</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <span class="badge bg-{{ 'success' if today_attendance.status == 'present' else 'warning' if today_attendance.status == 'late' else 'danger' }}">
+                                {{ today_attendance.status|upper }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                {% else %}
+                <p class="text-center text-muted">No attendance record for today</p>
+                {% endif %}
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('attendance.live') }}" class="btn btn-primary">
+                        <i class="fas fa-camera"></i> Mark Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Payrolls</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_payrolls %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Net Salary</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payroll in recent_payrolls %}
+                        <tr>
+                            <td>{{ payroll.month }}/{{ payroll.year }}</td>
+                            <td>Rs. {{ "%.2f"|format(payroll.net_salary) }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if payroll.status == 'paid' else 'warning' }}">
+                                    {{ payroll.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('payroll.payslip', payroll_id=payroll.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center text-muted">No payroll records</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('attendance.live') }}" class="btn btn-primary me-2">
+                    <i class="fas fa-camera"></i> Mark Attendance
+                </a>
+                <a href="{{ url_for('leave.requests') }}" class="btn btn-success me-2">
+                    <i class="fas fa-calendar-times"></i> Apply Leave
+                </a>
+                <a href="{{ url_for('attendance.history') }}" class="btn btn-info me-2">
+                    <i class="fas fa-history"></i> Attendance History
+                </a>
+                <a href="{{ url_for('chatbot.index') }}" class="btn btn-warning">
+                    <i class="fas fa-robot"></i> HR Assistant
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

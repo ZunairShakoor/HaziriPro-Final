@@ -1,0 +1,211 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Employee Profile{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>Employee Profile</h2>
+
+        <div>
+
+            <a href="{{ url_for('employees.edit', employee_id=employee.employee_id) }}"
+               class="btn btn-warning">
+
+                <i class="fas fa-edit"></i>
+                Edit
+
+            </a>
+
+            <a href="{{ url_for('employees.face_registration', employee_id=employee.employee_id) }}"
+               class="btn btn-info">
+
+                <i class="fas fa-camera"></i>
+                Face Registration
+
+            </a>
+
+            <a href="{{ url_for('employees.list') }}"
+               class="btn btn-secondary">
+
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <div class="card">
+
+                <div class="card-body text-center">
+
+                    {% if employee.photo %}
+
+                        <img src="{{ url_for('static', filename='uploads/employees/' ~ employee.photo) }}"
+                             class="img-fluid rounded-circle mb-3"
+                             style="width:180px;height:180px;object-fit:cover;">
+
+                    {% else %}
+
+                        <img src="{{ url_for('static', filename='images/default-user.png') }}"
+                             class="img-fluid rounded-circle mb-3"
+                             style="width:180px;height:180px;object-fit:cover;">
+
+                    {% endif %}
+
+                    <h4>
+
+                        {{ employee.first_name }}
+                        {{ employee.last_name }}
+
+                    </h4>
+
+                    <span class="badge bg-success">
+
+                        {{ employee.status|capitalize }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h4>Employee Information</h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+
+                            <th width="30%">Employee ID</th>
+
+                            <td>{{ employee.employee_id }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Email</th>
+
+                            <td>{{ employee.user.email if employee.user else "-" }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Department</th>
+
+                            <td>
+                                {% if employee.department %}
+                                    {{ employee.department.name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Position</th>
+
+                            <td>{{ employee.position }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Employment Type</th>
+
+                            <td>{{ employee.employment_type }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Phone</th>
+
+                            <td>{{ employee.phone }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Gender</th>
+
+                            <td>{{ employee.gender }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Date of Birth</th>
+
+                            <td>{{ employee.date_of_birth }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Hire Date</th>
+
+                            <td>{{ employee.hire_date }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Salary</th>
+
+                            <td>Rs. {{ "{:,.2f}".format(employee.base_salary or 0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Hourly Rate</th>
+
+                            <td>Rs. {{ "{:,.2f}".format(employee.hourly_rate or 0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Address</th>
+
+                            <td>{{ employee.address }}</td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

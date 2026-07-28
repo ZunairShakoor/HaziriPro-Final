@@ -1,0 +1,64 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}System Settings - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-cogs"></i> System Settings</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Attendance &amp; Payroll Rules</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">Grace Period</div>
+                <div class="fw-bold">{{ config.GRACE_PERIOD_MINUTES }} minutes</div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">Standard Work Hours / Day</div>
+                <div class="fw-bold">{{ config.WORK_HOURS_PER_DAY }} hours</div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">Overtime Multiplier</div>
+                <div class="fw-bold">{{ config.OVERTIME_MULTIPLIER }}x</div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">Tax Rate</div>
+                <div class="fw-bold">{{ (config.TAX_RATE * 100)|round(1) }}%</div>
+            </div>
+        </div>
+        <p class="text-muted small mb-0">
+            These values come from <code>config.py</code>. Changing them currently requires editing that file and
+            restarting the app — there's no in-app editor for them yet.
+        </p>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Face Recognition</h5>
+    </div>
+    <div class="card-body">
+        <div class="text-muted small">Model</div>
+        <div class="fw-bold mb-0">{{ config.FACE_RECOGNITION_MODEL }}</div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Audit Log</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small">
+            See who created/edited/deleted employees, approved leave requests,
+            and approved or paid payroll.
+        </p>
+        <a href="{{ url_for('settings.audit_log') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-clipboard-list"></i> View Audit Log
+        </a>
+    </div>
+</div>
+{% endblock %}

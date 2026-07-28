@@ -1,0 +1,131 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Face Registration{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h3>
+
+<i class="fas fa-camera"></i>
+
+Face Registration
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-4 text-center">
+
+{% if employee.photo %}
+
+<img
+src="{{ url_for('static', filename='uploads/employees/' ~ employee.photo) }}"
+class="img-fluid rounded-circle mb-3"
+style="width:200px;height:200px;object-fit:cover;">
+
+{% else %}
+
+<img
+src="{{ url_for('static', filename='images/default-user.png') }}"
+class="img-fluid rounded-circle mb-3"
+style="width:200px;height:200px;object-fit:cover;">
+
+{% endif %}
+
+<h4>
+
+{{ employee.first_name }}
+{{ employee.last_name }}
+
+</h4>
+
+<p>
+
+Employee ID:
+<strong>{{ employee.employee_id }}</strong>
+
+</p>
+
+</div>
+
+<div class="col-md-8">
+
+<form
+method="POST"
+enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Upload Face Image
+
+</label>
+
+<input
+type="file"
+name="photo"
+accept="image/*"
+class="form-control"
+required>
+
+</div>
+
+<div class="alert alert-info">
+
+<ul class="mb-0">
+
+<li>Use a clear image.</li>
+
+<li>Only one face should be visible.</li>
+
+<li>Face should look directly at the camera.</li>
+
+<li>Good lighting is recommended.</li>
+
+</ul>
+
+</div>
+
+<button
+type="submit"
+class="btn btn-success">
+
+<i class="fas fa-camera"></i>
+
+Register Face
+
+</button>
+
+<a
+href="{{ url_for('employees.profile', employee_id=employee.employee_id) }}"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

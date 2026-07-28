@@ -1,0 +1,83 @@
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'dashboard' in request.endpoint }}" 
+                   href="{{ url_for('dashboard.index') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            
+            {% if current_user.role in ['admin', 'hr', 'manager'] %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'employees' in request.endpoint }}" 
+                   href="{{ url_for('employees.list') }}">
+                    <i class="fas fa-users"></i> Employees
+                </a>
+            </li>
+            {% endif %}
+            
+            {% if current_user.role in ['admin', 'hr'] %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'departments' in request.endpoint }}" 
+                   href="{{ url_for('departments.list') }}">
+                    <i class="fas fa-building"></i> Departments
+                </a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'attendance' in request.endpoint }}" 
+                   href="{{ url_for('attendance.live') }}">
+                    <i class="fas fa-calendar-check"></i> Attendance
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'payroll' in request.endpoint }}" 
+                   href="{% if current_user.role in ['admin', 'hr'] %}{{ url_for('payroll.dashboard') }}{% else %}{{ url_for('payroll.salary', employee_id=current_user.employee.employee_id if current_user.employee else '') }}{% endif %}">
+                    <i class="fas fa-money-bill-wave"></i> Payroll
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'leave' in request.endpoint }}" 
+                   href="{{ url_for('leave.requests') }}">
+                    <i class="fas fa-calendar-times"></i> Leave
+                </a>
+            </li>
+            
+            {% if current_user.role in ['admin', 'hr'] %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'reports' in request.endpoint }}" 
+                   href="{{ url_for('reports.attendance') }}">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'chatbot' in request.endpoint }}" 
+                   href="{{ url_for('chatbot.index') }}">
+                    <i class="fas fa-robot"></i> Assistant
+                </a>
+            </li>
+            
+            <li class="nav-item mt-3">
+                <a class="nav-link {{ 'active' if request.endpoint == 'settings.profile' }}" 
+                   href="{{ url_for('settings.profile') }}">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+
+            {% if current_user.role == 'admin' %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'settings.system' }}"
+                   href="{{ url_for('settings.system') }}">
+                    <i class="fas fa-cogs"></i> System
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

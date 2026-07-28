@@ -1,0 +1,156 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Payslip - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-file-invoice-dollar"></i> Payslip</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('payroll.download_payslip', payroll_id=payroll.id) }}" class="btn btn-primary">
+            <i class="fas fa-download"></i> Download PDF
+        </a>
+    </div>
+</div>
+
+<div class="card" id="payslip">
+    <div class="card-body p-5">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h2>HaziriPro</h2>
+            <p class="text-muted">HR Management System</p>
+            <h4 class="mt-4">SALARY SLIP</h4>
+        </div>
+        
+        <!-- Employee Info -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="150">Employee ID:</th>
+                        <td>{{ payroll.employee.employee_id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Name:</th>
+                        <td>{{ payroll.employee.full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Department:</th>
+                        <td>{{ payroll.employee.department.name if payroll.employee.department else 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Position:</th>
+                        <td>{{ payroll.employee.position }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="150">Pay Period:</th>
+                        <td>{{ payroll.month }}/{{ payroll.year }}</td>
+                    </tr>
+                    <tr>
+                        <th>Work Days:</th>
+                        <td>{{ payroll.work_days }}</td>
+                    </tr>
+                    <tr>
+                        <th>Overtime Hours:</th>
+                        <td>{{ "%.2f"|format(payroll.overtime_hours) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <span class="badge bg-{{ 'success' if payroll.status == 'paid' else 'warning' }}">
+                                {{ payroll.status|upper }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Earnings -->
+        <h5 class="mb-3">Earnings</h5>
+        <table class="table table-bordered mb-4">
+            <thead class="table-light">
+                <tr>
+                    <th>Description</th>
+                    <th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Base Salary</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.base_salary) }}</td>
+                </tr>
+                <tr>
+                    <td>Overtime Pay</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.overtime_pay) }}</td>
+                </tr>
+                <tr>
+                    <td>Bonuses</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.bonuses) }}</td>
+                </tr>
+                <tr>
+                    <td>Allowances</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.allowances) }}</td>
+                </tr>
+                <tr class="table-success">
+                    <th>Total Earnings</th>
+                    <th class="text-end">Rs. {{ "%.2f"|format(payroll.gross_salary) }}</th>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Deductions -->
+        <h5 class="mb-3">Deductions</h5>
+        <table class="table table-bordered mb-4">
+            <thead class="table-light">
+                <tr>
+                    <th>Description</th>
+                    <th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tax ({{ (payroll.tax / payroll.gross_salary * 100)|round(2) if payroll.gross_salary > 0 else 0 }}%)</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.tax) }}</td>
+                </tr>
+                <tr>
+                    <td>Insurance</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.insurance) }}</td>
+                </tr>
+                <tr>
+                    <td>Other Deductions</td>
+                    <td class="text-end">Rs. {{ "%.2f"|format(payroll.other_deductions) }}</td>
+                </tr>
+                <tr class="table-danger">
+                    <th>Total Deductions</th>
+                    <th class="text-end">Rs. {{ "%.2f"|format(payroll.tax + payroll.insurance + payroll.other_deductions) }}</th>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Net Salary -->
+        <div class="alert alert-primary p-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>NET SALARY</h4>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h3>Rs. {{ "%.2f"|format(payroll.net_salary) }}</h3>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-5 pt-4 border-top">
+            <p class="text-muted small">
+                This is a computer-generated payslip. No signature required.
+                <br>
+                Generated on {{ now.strftime('%Y-%m-%d %H:%M:%S') }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

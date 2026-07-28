@@ -1,0 +1,107 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Attendance Reports - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-chart-bar"></i> Attendance Reports</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Generate Attendance Report</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('reports.generate_attendance') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Format</label>
+                        <select class="form-select" id="format" name="format" required>
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-download"></i> Generate Report
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Quick Reports</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-day fa-3x text-primary mb-3"></i>
+                        <h5>Today's Report</h5>
+                        <form method="POST" action="{{ url_for('reports.generate_attendance') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="start_date" value="{{ today }}">
+                            <input type="hidden" name="end_date" value="{{ today }}">
+                            <input type="hidden" name="format" value="pdf">
+                            <button type="submit" class="btn btn-primary">Download</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-week fa-3x text-success mb-3"></i>
+                        <h5>This Week</h5>
+                        <form method="POST" action="{{ url_for('reports.generate_attendance') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="start_date" value="{{ week_start }}">
+                            <input type="hidden" name="end_date" value="{{ today }}">
+                            <input type="hidden" name="format" value="pdf">
+                            <button type="submit" class="btn btn-success">Download</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt fa-3x text-info mb-3"></i>
+                        <h5>This Month</h5>
+                        <form method="POST" action="{{ url_for('reports.generate_attendance') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="start_date" value="{{ month_start }}">
+                            <input type="hidden" name="end_date" value="{{ today }}">
+                            <input type="hidden" name="format" value="pdf">
+                            <button type="submit" class="btn btn-info">Download</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

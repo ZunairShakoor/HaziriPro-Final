@@ -1,0 +1,1130 @@
+/* ============================================
+   HaziriPro — Design Tokens
+   Palette:   #6C63A6 dusty indigo → #8B6FAE dusty violet (primary gradient)
+              #5F8F73 dusty sage (success) · #C08A4E muted amber (warning)
+              #B25C6E dusty rose (danger)  · #4F8A90 muted teal (info)
+              #F6F5FB app background    · #1E1B2E ink text
+   Type:      'Outfit' (display/headings) + 'Inter' (body/UI)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --grad-primary: linear-gradient(135deg, #6C63A6 0%, #8B6FAE 100%);
+    --grad-success: linear-gradient(135deg, #5F8F73 0%, #7FAE93 100%);
+    --grad-warning: linear-gradient(135deg, #C08A4E 0%, #D9AD72 100%);
+    --grad-danger:  linear-gradient(135deg, #B25C6E 0%, #CC8494 100%);
+    --grad-info:    linear-gradient(135deg, #4F8A90 0%, #74ADB3 100%);
+
+    --accent-primary: #6C63A6;
+    --accent-success: #5F8F73;
+    --accent-warning: #C08A4E;
+    --accent-danger:  #B25C6E;
+    --accent-info:    #4F8A90;
+    --grad-bg:      radial-gradient(ellipse 120% 80% at top left, #EEF0FF 0%, #F6F5FB 45%, #F6F5FB 100%);
+
+    /* Softer, desaturated gradients used only for dashboard stat cards */
+    --grad-primary-soft: linear-gradient(135deg, #B6B4C2 0%, #9D9AB3 100%);
+    --grad-success-soft: linear-gradient(135deg, #B9C8BE 0%, #9FB6A8 100%);
+    --grad-warning-soft: linear-gradient(135deg, #D8CBB3 0%, #C7B591 100%);
+    --grad-danger-soft:  linear-gradient(135deg, #D4B8BF 0%, #C29AA5 100%);
+    --grad-info-soft:    linear-gradient(135deg, #B4C6C9 0%, #96AFB3 100%);
+
+    --ink: #1E1B2E;
+    --ink-soft: #6B6785;
+    --line: rgba(108, 99, 166, 0.10);
+
+    --shadow-sm: 0 2px 8px rgba(76, 60, 150, 0.06);
+    --shadow-md: 0 8px 24px rgba(76, 60, 150, 0.10);
+    --shadow-lg: 0 16px 40px rgba(76, 60, 150, 0.16);
+}
+
+/* General Styles */
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--grad-bg);
+    background-attachment: fixed;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6,
+.navbar-brand,
+.card-header {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    background: #FFFFFF;
+    box-shadow: inset -1px 0 0 var(--line), 4px 0 24px rgba(76, 60, 150, 0.04);
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: var(--ink-soft);
+    padding: 12px 20px;
+    margin: 2px 10px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.sidebar .nav-link:hover {
+    background: rgba(108, 99, 166, 0.08);
+    color: #6C63A6;
+    transform: translateX(2px);
+}
+
+.sidebar .nav-link.active {
+    background: var(--grad-primary);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(108, 99, 166, 0.35);
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+/* Main Content */
+main {
+    padding-top: 20px;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    border-radius: 16px;
+    background: #FFFFFF;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid var(--line);
+    font-weight: 600;
+    padding: 15px 20px;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+/* Tables */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--line);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: #6C63A6;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(108, 99, 166, 0.04);
+}
+
+/* Buttons */
+.btn {
+    font-family: 'Inter', sans-serif;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: all 0.25s ease;
+    border: none;
+}
+
+.btn i {
+    margin-right: 5px;
+}
+
+.btn-primary {
+    background: var(--grad-primary);
+    box-shadow: 0 4px 14px rgba(108, 99, 166, 0.30);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(108, 99, 166, 0.45);
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: var(--grad-success);
+    box-shadow: 0 4px 14px rgba(95, 143, 115, 0.30);
+}
+
+.btn-warning {
+    background: var(--grad-warning);
+    box-shadow: 0 4px 14px rgba(192, 138, 78, 0.30);
+}
+
+.btn-danger {
+    background: var(--grad-danger);
+    box-shadow: 0 4px 14px rgba(178, 92, 110, 0.30);
+}
+
+.btn-info {
+    background: var(--grad-info);
+    box-shadow: 0 4px 14px rgba(79, 138, 144, 0.30);
+}
+
+/* Navbar */
+.navbar {
+    background: #FFFFFF !important;
+    box-shadow: 0 2px 12px rgba(76, 60, 150, 0.08);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Dashboard Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-warning,
+.card.bg-danger,
+.card.bg-info {
+    border: none;
+    box-shadow: var(--shadow-md);
+    color: #1E1B2E;
+}
+
+.card.bg-primary { background: var(--grad-primary-soft) !important; }
+.card.bg-success { background: var(--grad-success-soft) !important; }
+.card.bg-warning { background: var(--grad-warning-soft) !important; }
+.card.bg-danger  { background: var(--grad-danger-soft) !important; }
+.card.bg-info    { background: var(--grad-info-soft) !important; }
+
+/* The templates also add Bootstrap's .text-white class to these same cards
+   (a leftover from the old vivid-color design). .text-white sets color:#fff
+   with !important, which only affects the card div itself — but it also
+   washed out the "opacity-50" icons and .card-title labels, which had no
+   explicit color of their own and so inherited white against our new pale
+   background. Force ink everywhere inside, regardless of .text-white. */
+.card.bg-primary.text-white,
+.card.bg-success.text-white,
+.card.bg-warning.text-white,
+.card.bg-danger.text-white,
+.card.bg-info.text-white,
+.card.bg-primary h2,
+.card.bg-success h2,
+.card.bg-warning h2,
+.card.bg-danger h2,
+.card.bg-info h2,
+.card.bg-primary h6,
+.card.bg-success h6,
+.card.bg-warning h6,
+.card.bg-danger h6,
+.card.bg-info h6,
+.card.bg-primary i,
+.card.bg-success i,
+.card.bg-warning i,
+.card.bg-danger i,
+.card.bg-info i {
+    color: #1E1B2E !important;
+}
+
+.card.bg-primary h2,
+.card.bg-success h2,
+.card.bg-warning h2,
+.card.bg-danger h2,
+.card.bg-info h2 {
+    font-weight: 700;
+}
+
+/* The label ("Total Employees") is meant to sit a little quieter than the
+   big number below it, same idea as the old white-on-color design. Icons
+   keep whatever opacity the markup already gives them (e.g. opacity-50 on
+   the big decorative fa-3x icons) rather than us forcing a dim here, since
+   some icons in these cards are meaningful inline status icons, not just
+   decoration. */
+.card.bg-primary h6,
+.card.bg-success h6,
+.card.bg-warning h6,
+.card.bg-danger h6,
+.card.bg-info h6 {
+    opacity: 0.75;
+}
+
+/* Badges */
+.badge {
+    padding: 6px 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    border: none;
+}
+
+.badge.bg-primary   { background: var(--grad-primary) !important; }
+.badge.bg-success   { background: var(--grad-success) !important; }
+.badge.bg-warning   { background: var(--grad-warning) !important; color: #fff !important; }
+.badge.bg-danger    { background: var(--grad-danger) !important; }
+.badge.bg-info      { background: var(--grad-info) !important; }
+.badge.bg-secondary { background: linear-gradient(135deg, #8B87A3 0%, #6B6785 100%) !important; }
+
+/* Forms */
+.form-label {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 1.5px solid #E4E1F5;
+    padding: 10px 15px;
+    background-color: #FCFCFF;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #6C63A6;
+    box-shadow: 0 0 0 0.2rem rgba(108, 99, 166, 0.15);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+    padding: 15px 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Login Page */
+.card-body.p-5 {
+    border-radius: 16px;
+}
+
+/* Video Feed */
+#video {
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    max-width: 100%;
+    height: auto;
+}
+
+/* Chat Messages */
+#chatMessages {
+    background: linear-gradient(180deg, #F6F5FB 0%, #EEF0FF 100%);
+    border-radius: 14px;
+    padding: 20px;
+}
+
+/* Payslip */
+#payslip {
+    background-color: white;
+}
+
+@media print {
+    .btn-toolbar,
+    .navbar,
+    .sidebar,
+    .border-bottom {
+        display: none !important;
+    }
+
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        padding: 0;
+    }
+
+    main {
+        padding-top: 10px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        animation: none;
+    }
+    .card, .btn, .sidebar .nav-link {
+        transition: none;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F1F0FA;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--grad-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4A4478;
+}
+
+/* Loading Spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+}
+
+/* Custom Utilities */
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(76, 60, 150, 0.075) !important;
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(76, 60, 150, 0.15) !important;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+/* Status Indicators */
+.status-online {
+    width: 10px;
+    height: 10px;
+    background: var(--grad-success);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    box-shadow: 0 0 0 3px rgba(95, 143, 115, 0.2);
+}
+
+.status-offline {
+    width: 10px;
+    height: 10px;
+    background: var(--grad-danger);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    box-shadow: 0 0 0 3px rgba(178, 92, 110, 0.2);
+}
+
+/* ============================================
+   Dark Theme
+   Activated via body.dark-theme
+   Adds new variables + overrides only.
+   Light Mode above remains fully untouched.
+   ============================================ */
+
+body.dark-theme {
+    --dark-bg: #0F172A;
+    --dark-surface: #1E293B;
+    --dark-sidebar: #111827;
+    --dark-navbar: #111827;
+    --dark-card: #1E293B;
+    --dark-card-header: #273449;
+    --dark-input-bg: #1E293B;
+    --dark-border: #334155;
+    --dark-text-primary: #F8FAFC;
+    --dark-text-secondary: #CBD5E1;
+    --dark-hover: #2D3B4F;
+
+    --ink: var(--dark-text-primary);
+    --ink-soft: var(--dark-text-secondary);
+    --line: var(--dark-border);
+}
+
+/* General Styles */
+body.dark-theme {
+    background: var(--dark-bg);
+    color: var(--dark-text-primary);
+}
+
+/* Sidebar */
+body.dark-theme .sidebar {
+    background: #111827 !important;
+    border-right: 1px solid #334155;
+    box-shadow: inset -1px 0 0 var(--dark-border), 4px 0 24px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-theme .sidebar .nav-link {
+    color: #CBD5E1;
+}
+
+body.dark-theme .sidebar .nav-link:hover {
+    background: #1F2937;
+    color: #FFFFFF;
+}
+
+body.dark-theme .sidebar .nav-link.active {
+    background: linear-gradient(135deg, #6C63A6, #8B6FAE);
+    color: #FFFFFF;
+    box-shadow: 0 8px 20px rgba(108, 99, 166, .35);
+}
+
+body.dark-theme .sidebar .nav-link i {
+    color: inherit;
+}
+
+body.dark-theme .sidebar::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+body.dark-theme .sidebar::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+/* Main Content */
+body.dark-theme main {
+    background: var(--dark-bg);
+}
+
+/* Cards */
+body.dark-theme .card {
+    background: var(--dark-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .card-header {
+    background-color: var(--dark-card-header);
+    border-bottom: 1px solid var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+/* Dashboard Cards (colored) stay on their gradients; text stays white already */
+
+/* Tables */
+body.dark-theme .table {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .table thead th {
+    border-bottom: 2px solid var(--dark-border);
+    color: #A5B4FC;
+    background-color: transparent;
+}
+
+body.dark-theme .table tbody tr {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .table tbody tr:hover {
+    background-color: var(--dark-hover);
+}
+
+body.dark-theme .table td,
+body.dark-theme .table th,
+body.dark-theme .table > :not(caption) > * > * {
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary) !important;
+    background-color: transparent;
+}
+
+/* Navbar */
+body.dark-theme .navbar {
+    background: var(--dark-navbar) !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .navbar-brand {
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Theme Toggle icon/button — kept subtle, no aggressive styling */
+body.dark-theme #themeToggle {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme #themeIcon {
+    color: var(--dark-text-primary);
+}
+
+/* Badges */
+body.dark-theme .badge.bg-light {
+    background-color: var(--dark-surface) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+/* Forms */
+body.dark-theme .form-label {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .form-control,
+body.dark-theme .form-select,
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+    background-color: var(--dark-input-bg);
+    border: 1.5px solid var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .form-control::placeholder,
+body.dark-theme textarea::placeholder {
+    color: var(--dark-text-secondary);
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .form-select:focus {
+    border-color: #8B6FAE;
+    box-shadow: 0 0 0 0.2rem rgba(139, 111, 174, 0.25);
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text-primary);
+}
+
+/* Dropdowns */
+body.dark-theme .dropdown-menu {
+    background-color: var(--dark-surface);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .dropdown-item {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .dropdown-item:hover,
+body.dark-theme .dropdown-item:focus {
+    background-color: var(--dark-hover);
+    color: #F8FAFC;
+}
+
+/* Modals */
+body.dark-theme .modal-content {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+}
+
+/* List Group */
+body.dark-theme .list-group-item {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+/* Pagination */
+body.dark-theme .pagination .page-link {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .pagination .page-link:hover {
+    background-color: var(--dark-hover);
+    color: #F8FAFC;
+}
+
+body.dark-theme .pagination .page-item.active .page-link {
+    background: var(--grad-primary);
+    border-color: transparent;
+    color: #fff;
+}
+
+body.dark-theme .pagination .page-item.disabled .page-link {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-secondary);
+}
+
+/* Alerts */
+body.dark-theme .alert {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Chat Messages */
+body.dark-theme #chatMessages {
+    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+}
+
+/* Payslip */
+body.dark-theme #payslip {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-primary);
+}
+
+/* Scrollbar */
+body.dark-theme ::-webkit-scrollbar-track {
+    background: var(--dark-surface);
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: var(--grad-primary);
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #6D28D9;
+}
+
+/* ============================================
+   Dark Theme — Extended Coverage
+   Appended overrides for remaining components
+   so no white surfaces remain in Dark Mode.
+   Light Theme above is fully untouched.
+   ============================================ */
+
+/* Layout wrappers */
+body.dark-theme .container,
+body.dark-theme .container-fluid,
+body.dark-theme .row,
+body.dark-theme [class^="col-"],
+body.dark-theme [class*=" col-"] {
+    background-color: transparent;
+}
+
+/* Bootstrap surface utilities safety net */
+body.dark-theme .bg-white,
+body.dark-theme .bg-light {
+    background-color: var(--dark-surface) !important;
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .text-dark {
+    color: var(--dark-text-primary) !important;
+}
+
+body.dark-theme .text-muted,
+body.dark-theme small {
+    color: var(--dark-text-secondary) !important;
+}
+
+/* Generic nav-link (nav-tabs / nav-pills, outside sidebar) */
+body.dark-theme .nav-link {
+    color: var(--dark-text-secondary);
+}
+
+body.dark-theme .nav-tabs,
+body.dark-theme .nav-pills {
+    border-color: var(--dark-border);
+}
+
+body.dark-theme .nav-tabs .nav-link {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+body.dark-theme .nav-tabs .nav-link.active,
+body.dark-theme .nav-tabs .nav-link:hover {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border) var(--dark-border) transparent;
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .nav-pills .nav-link.active {
+    background: var(--grad-primary);
+    color: #fff;
+}
+
+/* Card body */
+body.dark-theme .card-body {
+    color: var(--dark-text-primary);
+}
+
+/* Tables — full coverage including raw tags */
+body.dark-theme table,
+body.dark-theme .table-responsive {
+    background-color: transparent;
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme thead,
+body.dark-theme .table thead {
+    background-color: var(--dark-card-header);
+}
+
+body.dark-theme tbody,
+body.dark-theme tr,
+body.dark-theme th,
+body.dark-theme td {
+    background-color: transparent;
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary) !important;
+}
+
+body.dark-theme .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .table-hover tbody tr:hover {
+    background-color: var(--dark-hover);
+    color: var(--dark-text-primary);
+}
+
+/* Forms — raw labels + input groups */
+body.dark-theme label {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .input-group-text {
+    background-color: var(--dark-card-header);
+    border: 1.5px solid var(--dark-border);
+    color: var(--dark-text-secondary);
+}
+
+/* Dropdown divider */
+body.dark-theme .dropdown-divider {
+    border-color: var(--dark-border);
+}
+
+/* Modal — header/body/footer */
+body.dark-theme .modal-header,
+body.dark-theme .modal-footer {
+    border-color: var(--dark-border);
+}
+
+body.dark-theme .modal-body {
+    color: var(--dark-text-primary);
+}
+
+/* Offcanvas */
+body.dark-theme .offcanvas {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-primary);
+}
+
+/* Accordion */
+body.dark-theme .accordion-item {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+}
+
+body.dark-theme .accordion-header,
+body.dark-theme .accordion-button {
+    background-color: var(--dark-card-header);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .accordion-button:not(.collapsed) {
+    background-color: var(--dark-hover);
+    color: var(--dark-text-primary);
+    box-shadow: none;
+}
+
+body.dark-theme .accordion-button::after {
+    filter: invert(1) grayscale(1) brightness(1.8);
+}
+
+/* List group container */
+body.dark-theme .list-group {
+    border-color: var(--dark-border);
+}
+
+/* Buttons */
+body.dark-theme .btn-light {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .btn-secondary {
+    background-color: #334155;
+    border-color: #334155;
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .btn-outline-secondary,
+body.dark-theme .btn-outline-dark,
+body.dark-theme .btn-outline-light {
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .btn-outline-secondary:hover,
+body.dark-theme .btn-outline-dark:hover,
+body.dark-theme .btn-outline-light:hover {
+    background-color: var(--dark-hover);
+    color: #fff;
+}
+
+/* Search / filter / toolbar regions */
+body.dark-theme .search-box,
+body.dark-theme .filters,
+body.dark-theme .toolbar {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+/* Chart containers */
+body.dark-theme .chart-container,
+body.dark-theme canvas {
+    background-color: transparent;
+}
+
+/* Footer */
+body.dark-theme footer {
+    background-color: var(--dark-navbar);
+    color: var(--dark-text-secondary);
+    border-color: var(--dark-border);
+}
+
+/* Misc typography elements */
+body.dark-theme hr {
+    border-color: var(--dark-border);
+    opacity: 1;
+}
+
+body.dark-theme pre,
+body.dark-theme code {
+    background-color: var(--dark-card-header);
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme blockquote {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-secondary);
+    border-left: 3px solid var(--dark-border);
+}
+
+/* Border / shadow utilities */
+body.dark-theme .border {
+    border-color: var(--dark-border) !important;
+}
+
+body.dark-theme .shadow,
+body.dark-theme .shadow-sm {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ============================================
+   Dashboard Stat Cards — Dark Theme
+   Per request: dark mode keeps the SAME soft
+   gradient cards as light mode (no flattening/
+   dimming). The base .card.bg-* rules above
+   already apply here unchanged; we only add a
+   slightly deeper shadow so they lift off the
+   dark background.
+   ============================================ */
+
+body.dark-theme .card.bg-primary,
+body.dark-theme .card.bg-success,
+body.dark-theme .card.bg-warning,
+body.dark-theme .card.bg-danger,
+body.dark-theme .card.bg-info {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* ============================================
+   Notification Bell
+   Same look in light and dark mode (dark-theme
+   only swaps surface/border/text colors, per the
+   established --dark-* tokens).
+   ============================================ */
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    background: var(--grad-danger) !important;
+    box-shadow: 0 0 0 2px #1E293B;
+}
+
+.notification-dropdown {
+    width: 360px;
+    max-width: 90vw;
+    padding: 0;
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.notification-dropdown-header {
+    background: var(--grad-primary);
+    color: #fff;
+}
+
+.notification-dropdown-header .btn-link {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.notification-dropdown-header .btn-link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.notification-list {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.15s ease;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: rgba(108, 99, 166, 0.06);
+}
+
+.notification-item.notification-unread {
+    background-color: rgba(108, 99, 166, 0.05);
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.85rem;
+}
+
+.notification-icon-leave       { background: var(--grad-primary); }
+.notification-icon-employee    { background: var(--grad-success); }
+.notification-icon-attendance  { background: var(--grad-warning); }
+.notification-icon-payroll     { background: var(--grad-info); }
+.notification-icon-system      { background: linear-gradient(135deg, #8B87A3 0%, #6B6785 100%); }
+
+.notification-item-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.notification-item-title {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--ink);
+}
+
+.notification-item-message {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notification-item-time {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+}
+
+.notification-view-all {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.notification-view-all:hover {
+    text-decoration: underline;
+}
+
+/* Full notifications page (templates/notifications/list.html) */
+.list-group-item.notification-unread {
+    background-color: rgba(108, 99, 166, 0.05);
+}
+
+/* Dark theme overrides */
+body.dark-theme .notification-badge {
+    box-shadow: 0 0 0 2px var(--dark-navbar);
+}
+
+body.dark-theme .notification-dropdown {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+body.dark-theme .notification-item {
+    color: var(--dark-text-primary);
+    border-bottom-color: var(--dark-border);
+}
+
+body.dark-theme .notification-item:hover,
+body.dark-theme .notification-item.notification-unread,
+body.dark-theme .list-group-item.notification-unread {
+    background-color: var(--dark-hover);
+}
+
+body.dark-theme .notification-item-title {
+    color: var(--dark-text-primary);
+}
+
+body.dark-theme .notification-item-message,
+body.dark-theme .notification-item-time {
+    color: var(--dark-text-secondary);
+}

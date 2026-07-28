@@ -1,0 +1,46 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Employee Reports - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-users"></i> Employee Reports</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Generate Employee Report</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">Exports a full roster: name, department, position, hire date, employment type, status, and base salary.</p>
+        <form method="POST" action="{{ url_for('reports.generate_employees') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Format</label>
+                        <select class="form-select" id="format" name="format" required>
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary mb-3">
+                        <i class="fas fa-download"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <a href="{{ url_for('employees.list') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Employees
+        </a>
+    </div>
+</div>
+{% endblock %}

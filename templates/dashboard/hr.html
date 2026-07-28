@@ -1,0 +1,245 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}HR Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            <i class="fas fa-user-shield text-success"></i>
+            HR Dashboard
+        </h2>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5>Total Employees</h5>
+                    <h2>{{ total_employees|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                    <h5>Attendance</h5>
+                    <h2>{{ attendance_today|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-money-bill-wave fa-3x text-warning mb-3"></i>
+                    <h5>Payroll</h5>
+                    <h2>{{ payrolls|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-plane-departure fa-3x text-danger mb-3"></i>
+                    <h5>Pending Leaves</h5>
+                    <h2>{{ pending_leaves|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Today's Attendance</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="attendanceChart" height="180"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-smile"></i> Emotion Analytics (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if emotion_distribution.has_data %}
+                    <canvas id="emotionChart" height="180"></canvas>
+                    {% else %}
+                    <p class="text-muted text-center mb-0 py-4">
+                        No emotion data captured yet. Emotions are recorded automatically during face-recognition check-in/check-out.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-line"></i> This Week's Attendance Trend</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyTrendChart" height="90"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Recent Hires</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Hired</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for employee in recent_hires %}
+                                <tr>
+                                    <td>{{ employee.employee_id }}</td>
+                                    <td>{{ employee.full_name }}</td>
+                                    <td>{{ employee.department.name if employee.department else 'N/A' }}</td>
+                                    <td>{{ employee.hire_date.strftime('%Y-%m-%d') if employee.hire_date else '-' }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="4" class="text-center text-muted py-3">No employees yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        Human Resources
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        Welcome to the HR Dashboard.
+                    </p>
+
+                    <ul>
+
+                        <li>Manage Employees</li>
+
+                        <li>Approve Leave Requests</li>
+
+                        <li>View Attendance Reports</li>
+
+                        <li>Generate Payroll</li>
+
+                        <li>Analyze Employee Emotions</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const CHART_COLORS = {
+        primary: '#6C63A6',
+        success: '#5F8F73',
+        warning: '#C08A4E',
+        danger: '#B25C6E',
+        info: '#4F8A90',
+        neutral: '#8B87A3'
+    };
+
+    new Chart(document.getElementById('attendanceChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Present', 'Late', 'Absent'],
+            datasets: [{
+                data: [
+                    {{ attendance_summary.present|default(0) }},
+                    {{ attendance_summary.late|default(0) }},
+                    {{ attendance_summary.absent|default(0) }}
+                ],
+                backgroundColor: [CHART_COLORS.success, CHART_COLORS.warning, CHART_COLORS.danger]
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    {% if emotion_distribution.has_data %}
+    new Chart(document.getElementById('emotionChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: {{ emotion_distribution.labels|tojson }},
+            datasets: [{
+                data: {{ emotion_distribution.counts|tojson }},
+                backgroundColor: [
+                    CHART_COLORS.success, CHART_COLORS.info, CHART_COLORS.warning,
+                    CHART_COLORS.danger, CHART_COLORS.primary, CHART_COLORS.neutral, '#C9A9D9'
+                ]
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    {% endif %}
+
+    new Chart(document.getElementById('weeklyTrendChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: {{ weekly_trend.labels|tojson }},
+            datasets: [
+                { label: 'Present', data: {{ weekly_trend.present|tojson }}, backgroundColor: CHART_COLORS.success },
+                { label: 'Late', data: {{ weekly_trend.late|tojson }}, backgroundColor: CHART_COLORS.warning },
+                { label: 'Absent', data: {{ weekly_trend.absent|tojson }}, backgroundColor: CHART_COLORS.danger }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+</script>
+{% endblock %}

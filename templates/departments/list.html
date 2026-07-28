@@ -1,0 +1,95 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="d-flex justify-content-between mb-3">
+
+<h2>Departments</h2>
+
+<a
+href="{{ url_for('departments.add') }}"
+class="btn btn-primary">
+
+Add Department
+
+</a>
+
+</div>
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Code</th>
+
+<th>Description</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for department in departments %}
+
+<tr>
+
+<td>{{ department.id }}</td>
+
+<td>{{ department.name }}</td>
+
+<td>{{ department.code }}</td>
+
+<td>{{ department.description }}</td>
+
+<td>
+
+<a
+href="{{ url_for('departments.edit', department_id=department.id) }}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<form
+action="{{ url_for('departments.delete', department_id=department.id) }}"
+method="POST"
+style="display:inline;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<button
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete department?')">
+
+Delete
+
+</button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

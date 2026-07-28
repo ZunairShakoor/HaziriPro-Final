@@ -1,0 +1,109 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Live Attendance - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+<h1 class="h2"><i class="fas fa-camera"></i> Live Attendance</h1>
+</div>
+
+<div class="row">
+<div class="col-md-8">
+<div class="card shadow-sm">
+<div class="card-header"><h5 class="mb-0">Camera Feed</h5></div>
+<div class="card-body text-center">
+<video id="video" width="640" height="480" autoplay class="rounded shadow"></video>
+<canvas id="canvas" style="display:none;"></canvas>
+
+<div class="mt-4">
+<button id="checkInBtn" class="btn btn-success btn-lg me-2"><i class="fas fa-sign-in-alt"></i> Check In</button>
+<button id="checkOutBtn" class="btn btn-danger btn-lg"><i class="fas fa-sign-out-alt"></i> Check Out</button>
+</div>
+
+<div id="result" class="mt-4"></div>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card shadow-sm">
+<div class="card-header"><h5 class="mb-0">Instructions</h5></div>
+<div class="card-body">
+<ol>
+<li>Allow camera access.</li>
+<li>Position your face clearly.</li>
+<li>Click Check In.</li>
+<li>Click Check Out.</li>
+</ol>
+<div class="alert alert-info">Ensure your face is visible with good lighting.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const video=document.getElementById('video');
+const canvas=document.getElementById('canvas');
+const result=document.getElementById('result');
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(s=>video.srcObject=s)
+.catch(()=>result.innerHTML='<div class="alert alert-danger">Unable to access camera.</div>');
+
+function captureImage(){
+canvas.width=video.videoWidth;
+canvas.height=video.videoHeight;
+const ctx=canvas.getContext('2d');
+ctx.drawImage(video,0,0);
+return canvas.toDataURL('image/jpeg');
+}
+
+function getEmotionEmoji(e){
+switch((e||'').toLowerCase()){
+case 'happy': return ' Happy';
+case 'sad': return ' Sad';
+case 'angry': return ' Angry';
+case 'neutral': return ' Neutral';
+case 'fear': return ' Fear';
+case 'surprise': return ' Surprise';
+case 'disgust': return ' Disgust';
+default: return ' Unknown';
+}
+}
+
+function showProcessing(){
+result.innerHTML='<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Processing...</div>';
+}
+
+function showCard(d,title,out=false){
+result.innerHTML=`<div class="alert alert-success shadow text-start">
+<h4 class="text-center">${title}</h4><hr>
+<p><strong>Employee</strong><br>${d.employee.name} (${d.employee.id})</p>
+<p><strong>Emotion</strong><br>${getEmotionEmoji(d.emotion)}</p>
+<p><strong>Emotion Confidence</strong><br>${d.emotion_confidence??0}%</p>
+${out?`<p><strong>Work Hours</strong><br>${d.work_hours??0} hrs</p>`:`<p><strong>Face Match</strong><br>${d.face_confidence??0}%</p>`}
+<hr>
+<div class="alert alert-warning mb-0">
+<h5> AI Wellness Recommendation</h5>
+<p><strong>Dear ${d.employee.name},</strong><br>${d.quote ?? 'Stay positive and have a productive day!'}</p>
+</div>
+</div>`;
+}
+
+checkInBtn.onclick=()=>{
+showProcessing();
+fetch('/attendance/check-in',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify({image:captureImage()})})
+.then(r=>r.json()).then(d=>d.success?showCard(d,'✅ Attendance Marked Successfully'):result.innerHTML=`<div class="alert alert-danger">${d.message}</div>`);
+};
+
+checkOutBtn.onclick=()=>{
+showProcessing();
+fetch('/attendance/check-out',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCsrfToken()},body:JSON.stringify({image:captureImage()})})
+.then(r=>r.json()).then(d=>d.success?showCard(d,'✅ Check-out Successful',true):result.innerHTML=`<div class="alert alert-danger">${d.message}</div>`);
+};
+</script>
+{% endblock %}

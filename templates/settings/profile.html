@@ -1,0 +1,86 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+
+                        <img src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                             class="rounded-circle mb-3"
+                             width="120"
+                             height="120"
+                             alt="Profile">
+
+                        <h2 class="fw-bold">
+                            {{ current_user.username }}
+                        </h2>
+
+                        <p class="text-muted">
+                            {{ current_user.role|title }}
+                        </p>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold">Username</label>
+                            <input class="form-control"
+                                   value="{{ current_user.username }}"
+                                   readonly>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold">Email</label>
+                            <input class="form-control"
+                                   value="{{ current_user.email }}"
+                                   readonly>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold">Role</label>
+                            <input class="form-control"
+                                   value="{{ current_user.role }}"
+                                   readonly>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold">Account Status</label>
+                            <input class="form-control"
+                                   value="{% if current_user.is_active %}Active{% else %}Inactive{% endif %}"
+                                   readonly>
+                        </div>
+
+                    </div>
+
+                    <div class="text-end mt-4">
+
+                        <a href="{{ url_for('dashboard.index') }}"
+                           class="btn btn-secondary">
+                            Back
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

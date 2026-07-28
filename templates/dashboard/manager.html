@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-user-tie text-primary"></i>
+            Manager Dashboard
+        </h2>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5>Total Employees</h5>
+                    <h2>{{ total_employees|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-check fa-3x text-success mb-3"></i>
+                    <h5>Present Today</h5>
+                    <h2>{{ present_today|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-times fa-3x text-danger mb-3"></i>
+                    <h5>Absent</h5>
+                    <h2>{{ absent_today|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-smile fa-3x text-warning mb-3"></i>
+                    <h5>Happy Employees</h5>
+                    <h2>{{ happy_employees|default(0) }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-header">
+            <h5 class="mb-0">
+                Team Overview
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <p>
+                Welcome to the Manager Dashboard.
+            </p>
+
+            <p>
+                Use the sidebar to manage employees, attendance, payroll, reports and leave requests.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

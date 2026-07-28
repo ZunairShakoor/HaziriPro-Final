@@ -1,0 +1,76 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Payroll Reports - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-money-bill-wave"></i> Payroll Reports</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Generate Payroll Report</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('reports.generate_payroll') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="month" class="form-label">Month</label>
+                        <select class="form-select" id="month" name="month" required>
+                            {% for m in range(1, 13) %}
+                            <option value="{{ m }}">{{ ['January','February','March','April','May','June','July','August','September','October','November','December'][m-1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="year" class="form-label">Year</label>
+                        <select class="form-select" id="year" name="year" required></select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Format</label>
+                        <select class="form-select" id="format" name="format" required>
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-download"></i> Generate Report
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Populate the year dropdown around the current year, and default
+    // month/year selects to today's date.
+    (function () {
+        var yearSelect = document.getElementById('year');
+        var monthSelect = document.getElementById('month');
+        var now = new Date();
+        var currentYear = now.getFullYear();
+
+        for (var y = currentYear; y >= currentYear - 5; y--) {
+            var opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            yearSelect.appendChild(opt);
+        }
+
+        monthSelect.value = now.getMonth() + 1;
+    })();
+</script>
+{% endblock %}

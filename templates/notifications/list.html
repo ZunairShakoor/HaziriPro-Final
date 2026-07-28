@@ -1,0 +1,83 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Notifications - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-bell"></i> Notifications</h1>
+    {% if notifications %}
+    <form method="POST" action="{{ url_for('notifications.mark_all_read') }}" id="markAllForm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-check-double"></i> Mark all as read
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        {% if notifications %}
+        <div class="list-group list-group-flush">
+            {% for n in notifications %}
+            <a href="{{ url_for('notifications.open_notification', notification_id=n.id) }}"
+               class="list-group-item list-group-item-action d-flex align-items-start gap-3 {% if not n.is_read %}notification-unread{% endif %}">
+                <span class="notification-icon notification-icon-{{ n.category }}">
+                    <i class="fas fa-{{ n.icon }}"></i>
+                </span>
+                <span class="flex-grow-1">
+                    <span class="d-flex justify-content-between">
+                        <strong>{{ n.title }}</strong>
+                        <small class="text-muted">{{ n.created_at|datetime }}</small>
+                    </span>
+                    {% if n.message %}
+                    <span class="d-block text-muted small mt-1">{{ n.message }}</span>
+                    {% endif %}
+                </span>
+                {% if not n.is_read %}
+                <span class="badge bg-primary align-self-center">New</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center text-muted py-5">
+            <i class="fas fa-bell-slash fa-3x mb-3"></i>
+            <p class="mb-0">You're all caught up. No notifications yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if pagination and pagination.pages > 1 %}
+<nav class="mt-3" aria-label="Notifications pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('notifications.index', page=pagination.prev_num) if pagination.has_prev else '#' }}">Previous</a>
+        </li>
+        {% for p in pagination.iter_pages() %}
+            {% if p %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('notifications.index', page=p) }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endfor %}
+        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('notifications.index', page=pagination.next_num) if pagination.has_next else '#' }}">Next</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('markAllForm')?.addEventListener('submit', function (e) {
+    e.preventDefault();
+    fetch("{{ url_for('notifications.mark_all_read') }}", { method: 'POST', headers: { 'X-CSRFToken': getCsrfToken() } })
+        .then(() => window.location.reload());
+});
+</script>
+{% endblock %}

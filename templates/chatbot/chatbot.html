@@ -1,0 +1,148 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}HR Assistant - HaziriPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-robot"></i> HR Assistant</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-comments"></i> Chat with HR Assistant
+                </h5>
+            </div>
+            <div class="card-body" style="height: 500px; overflow-y: auto;" id="chatMessages">
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-robot fa-3x mb-3"></i>
+                    <p>Hello! I'm your HR Assistant. How can I help you today?</p>
+                    <small>Try asking: "What's my attendance today?" or "Show my salary"</small>
+                </div>
+            </div>
+            <div class="card-footer">
+                <form id="chatForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" placeholder="Type your message..." autocomplete="off">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">Quick Questions</h6>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-sm btn-outline-primary me-2 mb-2 quick-question" data-question="What's my attendance today?">
+                    Today's Attendance
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-2 mb-2 quick-question" data-question="Show this month's attendance">
+                    Monthly Attendance
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-2 mb-2 quick-question" data-question="What's my last salary?">
+                    Last Salary
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-2 mb-2 quick-question" data-question="Check my leave status">
+                    Leave Status
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-2 mb-2 quick-question" data-question="Show my info">
+                    My Profile
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-2 mb-2 quick-question" data-question="help">
+                    Help
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const messageInput = document.getElementById('messageInput');
+    const quickQuestions = document.querySelectorAll('.quick-question');
+    
+    // Initialize
+    let isFirstMessage = true;
+    
+    // Add message to chat
+    function addMessage(message, isUser = false) {
+        if (isFirstMessage) {
+            chatMessages.innerHTML = '';
+            isFirstMessage = false;
+        }
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `mb-3 ${isUser ? 'text-end' : ''}`;
+        messageDiv.innerHTML = `
+            <div class="d-inline-block p-2 rounded ${isUser ? 'bg-primary text-white' : 'bg-light'}">
+                ${isUser ? '<i class="fas fa-user me-2"></i>' : '<i class="fas fa-robot me-2"></i>'}
+                <span style="white-space: pre-wrap;">${message}</span>
+            </div>
+        `;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Send message
+    function sendMessage(message) {
+        if (!message.trim()) return;
+        
+        addMessage(message, true);
+        messageInput.value = '';
+        
+        // Show typing indicator
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing';
+        typingDiv.className = 'mb-3';
+        typingDiv.innerHTML = '<div class="d-inline-block p-2 rounded bg-light"><i class="fas fa-robot me-2"></i><i class="fas fa-ellipsis-h"></i></div>';
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Send to server
+        fetch('/chatbot/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('typing').remove();
+            if (data.success) {
+                addMessage(data.response);
+            } else {
+                addMessage('Sorry, I encountered an error. Please try again.');
+            }
+        })
+        .catch(error => {
+            document.getElementById('typing').remove();
+            addMessage('Sorry, I encountered an error. Please try again.');
+            console.error('Error:', error);
+        });
+    }
+    
+    // Form submit
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        sendMessage(messageInput.value);
+    });
+    
+    // Quick questions
+    quickQuestions.forEach(btn => {
+        btn.addEventListener('click', function() {
+            sendMessage(this.dataset.question);
+        });
+    });
+</script>
+{% endblock %}
