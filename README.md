@@ -1,8 +1,4 @@
-# 🎓 HaziriPro – AI-Based Smart Attendance System with Emotion Detection
-
-<p align="center">
-  <img src="static/favicon.ico" alt="HaziriPro Logo" width="120"/>
-</p>
+#  HaziriPro – AI-Based Smart Attendance System with Emotion Detection
 
 <p align="center">
   <strong>Final Year Project (FYP)</strong><br>
